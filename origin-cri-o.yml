@@ -143,6 +143,21 @@
         replace: 'storage_driver = "overlay2"'
         name: /etc/crio/crio.conf
         backup: yes
+    - name: Create CRI-O systemd file
+      copy:
+         content: |
+                 Description=OCI-based implementation of Kubernetes Container Runtime Interface
+                 Documentation="https://github.com/kubernetes-incubator/cri-o
+
+                 [Service]
+                 ExecStart=/usr/local/bin/crio --debug
+                 Restart=on-failure
+                 RestartSec=5
+
+                 [Install]
+                 WantedBy=multi-user.target
+
+         dest: /etc/systemd/system/crio.service
     - name: enable and start CRI-O
       systemd:
         name: crio
